@@ -153,3 +153,11 @@ python -m pytest --cov=worldspec --cov-report=term-missing
 
 See `AGENTS.md` for the operating rules this codebase is built under and
 `docs/open-questions.md` for recorded assumptions and deferred work.
+
+## License
+
+Licensed under the [GNU Affero General Public License v3.0 or later](LICENSE) (AGPL-3.0-or-later).
+
+Note: the AGPL requires that if you run a modified version of this software to
+provide a network service, you must make the corresponding source code
+available to users of that service.
