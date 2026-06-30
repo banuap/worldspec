@@ -78,6 +78,6 @@ artifacts here are exactly what such a group would start from.
 - [ ] Pages enabled (Settings → Pages → /docs)
 - [ ] Site resolves at the URLs in §1
 - [ ] (Optional) w3id.org redirect merged; URLs updated
-- [ ] Zenodo enabled; `v0.1.0` release cut; DOI added to README + CITATION.cff
+- [x] Zenodo enabled; `v0.1.0` release cut; DOI `10.5281/zenodo.21077393` added to README + CITATION.cff
 - [ ] Media types submitted to IANA (provisional)
 - [ ] Spec license (CC BY 4.0) + implementation grant reviewed (`LICENSE-spec`, spec §Status)

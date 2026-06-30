@@ -14,6 +14,11 @@ url: "https://banuap.github.io/worldspec/"
 license: AGPL-3.0-or-later
 version: "0.1.0"
 date-released: "2026-06-30"
+doi: "10.5281/zenodo.21077393"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21077393"
+    description: "Concept DOI — always resolves to the latest version."
 keywords:
   - declarative-modeling
   - invariants

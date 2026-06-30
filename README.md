@@ -1,5 +1,10 @@
 # WorldSpec
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21077393.svg)](https://doi.org/10.5281/zenodo.21077393)
+[![Spec: v0.1](https://img.shields.io/badge/spec-v0.1-blue)](https://banuap.github.io/worldspec/spec/0.1/)
+[![License: AGPL v3](https://img.shields.io/badge/code-AGPL--3.0-blue)](LICENSE)
+[![Spec license: CC BY 4.0](https://img.shields.io/badge/spec-CC--BY--4.0-lightgrey)](LICENSE-spec)
+
 > **Model the enterprise. Predict the transition. Preserve what matters.**
 
 WorldSpec is a declarative language and compiler for modeling enterprise
