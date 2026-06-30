@@ -1,0 +1,53 @@
+# Application-modernization ontology — relationships (subset, §13).
+
+relationship dependsOn:
+  from: Application
+  to: Application
+  cardinality: many
+  temporal: true
+
+relationship reads:
+  from: BatchJob
+  to: Dataset
+  cardinality: many
+
+relationship writes:
+  from: BatchJob
+  to: Dataset
+  cardinality: many
+
+relationship invokes:
+  from: Application
+  to: Program
+  cardinality: many
+
+relationship produces:
+  from: BatchJob
+  to: Dataset
+  cardinality: many
+
+relationship consumes:
+  from: ReportingSystem
+  to: Dataset
+  cardinality: many
+
+relationship scheduledBy:
+  from: BatchJob
+  to: Scheduler
+  cardinality: one
+
+relationship governedBy:
+  from: Dataset
+  to: Control
+  cardinality: many
+
+relationship supports:
+  from: Application
+  to: BusinessCapability
+  cardinality: many
+
+relationship replacedBy:
+  from: Application
+  to: Application
+  cardinality: one
+  temporal: true

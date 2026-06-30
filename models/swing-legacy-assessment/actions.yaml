@@ -1,0 +1,52 @@
+# Legacy Java Swing assessment ontology — remediation actions.
+# These are the safe "moves" that resolve the assessed risks.
+
+action MoveIoOffEdt:
+  inputs:
+    handler: { type: ref, target: EventHandler }
+  preconditions:
+    - handler.executesOn == "edt"
+  effects:
+    - handler.executesOn = "worker"
+    - handler.performsBlockingIo = false
+  rollback:
+    - handler.executesOn = "edt"
+
+action HashCredentials:
+  inputs:
+    store: { type: ref, target: CredentialStore }
+  preconditions:
+    - store.storageScheme == "plaintext"
+  effects:
+    - store.storageScheme = "salted_hashed"
+    - store.encryptionAtRest = true
+  rollback:
+    - store.storageScheme = "plaintext"
+
+action ExtractServiceLayer:
+  inputs:
+    component: { type: ref, target: UiComponent }
+    service: { type: ref, target: Service }
+  preconditions:
+    - component.containsBusinessLogic == true
+  effects:
+    - component.containsBusinessLogic = false
+  rollback:
+    - component.containsBusinessLogic = true
+
+action ConsolidateStateOwnership:
+  inputs:
+    state: { type: ref, target: SharedState }
+  effects:
+    - state.writerCount = 1
+    - state.hasSingleOwner = true
+  rollback:
+    - state.hasSingleOwner = false
+
+action RemoveUiTraversal:
+  inputs:
+    component: { type: ref, target: UiComponent }
+  effects:
+    - component.traversesContainerTree = false
+  rollback:
+    - component.traversesContainerTree = true

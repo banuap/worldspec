@@ -1,0 +1,38 @@
+# Legacy Java Swing assessment ontology — relationships (structure & impact).
+
+relationship contains:
+  from: UiComponent
+  to: UiComponent
+  cardinality: many
+
+relationship handles:
+  from: EventHandler
+  to: UiComponent
+  cardinality: many
+
+relationship mutates:
+  from: EventHandler
+  to: SharedState
+  cardinality: many
+
+relationship reads:
+  from: EventHandler
+  to: SharedState
+  cardinality: many
+
+# A UI component that persists directly is the layering smell we assess.
+relationship persistsVia:
+  from: UiComponent
+  to: PersistenceUnit
+  cardinality: many
+
+relationship authenticatesVia:
+  from: UiComponent
+  to: CredentialStore
+  cardinality: many
+
+# Where domain operations *should* live.
+relationship ownsState:
+  from: Service
+  to: SharedState
+  cardinality: many

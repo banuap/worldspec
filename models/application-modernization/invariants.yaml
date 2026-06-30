@@ -1,0 +1,37 @@
+# Application-modernization ontology — invariants (subset, §13).
+
+invariant SingleWriter:
+  appliesTo: Dataset
+  expression:
+    operator: "<="
+    left: { function: count, path: activeWriters }
+    right: 1
+  severity: critical
+  onViolation: { action: block_transition }
+
+invariant SettlementBalance:
+  appliesTo: Dataset
+  expression:
+    operator: "=="
+    left: { function: sum, path: unreconciledItems }
+    right: 0
+  severity: critical
+  onViolation: { action: block_transition }
+
+invariant BatchCompletionSLA:
+  appliesTo: BatchJob
+  expression:
+    operator: "<="
+    left: { path: durationMinutes }
+    right: 120
+  severity: high
+  onViolation: { action: warn }
+
+invariant RollbackAvailable:
+  appliesTo: Application
+  expression:
+    operator: ">="
+    left: { path: rollbackWindowHours }
+    right: 1
+  severity: critical
+  onViolation: { action: block_transition }

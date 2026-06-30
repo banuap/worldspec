@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv --version)",
+      "Bash(poetry --version)",
+      "Bash(pip --version)",
+      "Bash(python -c \"import yaml; print\\('pyyaml', yaml.__version__\\)\")",
+      "Bash(python -c \"import pydantic; print\\('pydantic', pydantic.VERSION\\)\")",
+      "Bash(python -c \"import typer; print\\('typer', typer.__version__\\)\")",
+      "Bash(python -c \"import ruamel.yaml; print\\('ruamel ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python *)",
+      "Bash(PYTHONPATH=src python -c ' *)",
+      "Bash(worldspec version *)",
+      "Bash(worldspec validate *)",
+      "Bash(worldspec compile *)",
+      "Bash(worldspec inspect *)",
+      "Bash(worldspec --help)",
+      "mcp__claude_ai_Claude_Code_Remote__add_repo",
+      "Bash(worldspec simulate *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(worldspec demo *)",
+      "Read(//c/Program Files/Python312/Lib/site-packages/**)",
+      "Bash(worldspec build *)",
+      "Bash(taskkill //PID 39476 //F)",
+      "Bash(tasklist //FI \"IMAGENAME eq worldspec.exe\")",
+      "Bash(git check-ignore *)",
+      "Read(//tmp/gm2/trading-rich/**)"
+    ]
+  }
+}

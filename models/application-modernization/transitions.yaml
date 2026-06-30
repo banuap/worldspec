@@ -1,0 +1,12 @@
+# Application-modernization ontology — transitions (subset, §13).
+# Only COBOLToJava is fully modeled in v0.1.
+
+transition COBOLToJava:
+  action: TransferWriteAuthority
+  from: { orchestrationPlatform: COBOL }
+  to: { orchestrationPlatform: Java }
+  preserves:
+    - SingleWriter
+    - SettlementBalance
+    - BatchCompletionSLA
+    - RollbackAvailable

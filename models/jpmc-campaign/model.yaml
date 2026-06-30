@@ -1,0 +1,263 @@
+entity AudienceSegment:
+  description: "Target audience segment"
+  identity: [segmentId]
+  properties:
+    segmentId: {type: string, required: true}
+    name: {type: string, required: true}
+    size: {type: int, required: true}
+    avgLifetimeValue: {type: float, required: true}
+    preferredChannels: {type: string}
+
+entity Campaign:
+  description: "A marketing campaign tracking performance and spend"
+  identity: [campaignId]
+  properties:
+    campaignId: {type: string, required: true}
+    name: {type: string, required: true}
+    channel: {type: enum, values: ["Email", "Social Media", "Display Ads", "Search (SEM)", "Direct Mail", "Video"], required: true}
+    campaignType: {type: string, required: true}
+    region: {type: string, required: true}
+    startDate: {type: datetime, required: true}
+    endDate: {type: datetime, required: true}
+    budget: {type: float, required: true}
+    spend: {type: float, required: true}
+    impressions: {type: int, required: true}
+    clicks: {type: int, required: true}
+    conversions: {type: int, required: true}
+    revenue: {type: float, required: true}
+    status: {type: enum, values: ["Draft", "Active", "Paused", "Completed"], required: true}
+
+entity DailyMetric:
+  description: "Daily performance metrics for a specific campaign"
+  identity: [id]
+  properties:
+    id: {type: string, required: true}
+    date: {type: datetime, required: true}
+    impressions: {type: int, required: true}
+    clicks: {type: int, required: true}
+    conversions: {type: int, required: true}
+    spend: {type: float, required: true}
+    revenue: {type: float, required: true}
+
+entity User:
+  description: "Admin portal user"
+  identity: [userId]
+  properties:
+    userId: {type: string, required: true}
+    email: {type: string, required: true}
+    role: {type: enum, values: ["admin", "editor", "viewer"], required: true}
+    status: {type: enum, values: ["active", "inactive"], required: true}
+
+entity Taxonomy:
+  description: "Data schema taxonomy definition"
+  identity: [taxonomyId]
+  properties:
+    taxonomyId: {type: string, required: true}
+    name: {type: string, required: true}
+    category: {type: string, required: true}
+    status: {type: enum, values: ["draft", "active", "archived"], required: true}
+
+entity AuditLog:
+  description: "System audit trail for compliance and security"
+  identity: [logId]
+  properties:
+    logId: {type: string, required: true}
+    action: {type: string, required: true}
+    resource: {type: string, required: true}
+    timestamp: {type: datetime, required: true}
+
+relationship campaignAudience:
+  from: Campaign
+  to: AudienceSegment
+  cardinality: one
+  temporal: false
+
+relationship metricCampaign:
+  from: DailyMetric
+  to: Campaign
+  cardinality: one
+  temporal: true
+
+relationship taxonomyCreator:
+  from: Taxonomy
+  to: User
+  cardinality: one
+  temporal: false
+
+relationship auditUser:
+  from: AuditLog
+  to: User
+  cardinality: one
+  temporal: false
+
+state CampaignLifecycle:
+  entity: Campaign
+  dimensions:
+    status: {type: enum, values: ["Draft", "Active", "Paused", "Completed"]}
+
+state TaxonomyLifecycle:
+  entity: Taxonomy
+  dimensions:
+    status: {type: enum, values: ["draft", "active", "archived"]}
+
+state UserLifecycle:
+  entity: User
+  dimensions:
+    status: {type: enum, values: ["active", "inactive"]}
+
+invariant CampaignBudgetLimit:
+  appliesTo: Campaign
+  expression:
+    operator: "<="
+    left: {path: "spend"}
+    right: {path: "budget"}
+  severity: warning
+  onViolation:
+    action: warn
+
+invariant CampaignDateOrder:
+  appliesTo: Campaign
+  expression:
+    operator: "<="
+    left: {path: "startDate"}
+    right: {path: "endDate"}
+  severity: critical
+  onViolation:
+    action: block_transition
+
+invariant CampaignSpendPositive:
+  appliesTo: Campaign
+  expression:
+    operator: ">="
+    left: {path: "spend"}
+    right: 0.0
+  severity: high
+  onViolation:
+    action: block_transition
+
+invariant CampaignRevenuePositive:
+  appliesTo: Campaign
+  expression:
+    operator: ">="
+    left: {path: "revenue"}
+    right: 0.0
+  severity: high
+  onViolation:
+    action: block_transition
+
+invariant DailyMetricIntegrity:
+  appliesTo: DailyMetric
+  expression:
+    operator: "and"
+    operands:
+      - {operator: ">=", left: {path: "impressions"}, right: 0}
+      - {operator: ">=", left: {path: "clicks"}, right: 0}
+      - {operator: ">=", left: {path: "conversions"}, right: 0}
+      - {operator: ">=", left: {path: "spend"}, right: 0.0}
+      - {operator: ">=", left: {path: "revenue"}, right: 0.0}
+  severity: critical
+  onViolation:
+    action: block_transition
+
+invariant AudienceSizeValid:
+  appliesTo: AudienceSegment
+  expression:
+    operator: ">="
+    left: {path: "size"}
+    right: 1
+  severity: high
+  onViolation:
+    action: block_transition
+
+invariant UserEmailExists:
+  appliesTo: User
+  expression:
+    operator: "=="
+    left: {function: exists, path: "email"}
+    right: true
+  severity: critical
+  onViolation:
+    action: block_transition
+
+action ActivateCampaign:
+  inputs:
+    campaign: {type: ref, target: Campaign}
+  preconditions:
+    - "campaign.status == 'Draft'"
+    - "campaign.budget > 0.0"
+  effects:
+    - "campaign.status = 'Active'"
+  rollback:
+    - "campaign.status = 'Draft'"
+
+action PauseCampaign:
+  inputs:
+    campaign: {type: ref, target: Campaign}
+  preconditions:
+    - "campaign.status == 'Active'"
+  effects:
+    - "campaign.status = 'Paused'"
+  rollback:
+    - "campaign.status = 'Active'"
+
+action CompleteCampaign:
+  inputs:
+    campaign: {type: ref, target: Campaign}
+  preconditions:
+    - "campaign.status == 'Active'"
+  effects:
+    - "campaign.status = 'Completed'"
+  rollback:
+    - "campaign.status = 'Active'"
+
+action PublishTaxonomy:
+  inputs:
+    taxonomy: {type: ref, target: Taxonomy}
+    user: {type: ref, target: User}
+  preconditions:
+    - "taxonomy.status == 'draft'"
+    - "user.role == 'admin'"
+    - "user.status == 'active'"
+  effects:
+    - "taxonomy.status = 'active'"
+  rollback:
+    - "taxonomy.status = 'draft'"
+
+transition CampaignActivation:
+  action: ActivateCampaign
+  from:
+    status: "Draft"
+  to:
+    status: "Active"
+  preserves:
+    - CampaignBudgetLimit
+    - CampaignDateOrder
+    - CampaignSpendPositive
+
+transition CampaignPausing:
+  action: PauseCampaign
+  from:
+    status: "Active"
+  to:
+    status: "Paused"
+  preserves:
+    - CampaignBudgetLimit
+
+transition CampaignCompletion:
+  action: CompleteCampaign
+  from:
+    status: "Active"
+  to:
+    status: "Completed"
+  preserves:
+    - CampaignBudgetLimit
+    - CampaignDateOrder
+
+transition TaxonomyPublishing:
+  action: PublishTaxonomy
+  from:
+    status: "draft"
+  to:
+    status: "active"
+  preserves:
+    - UserEmailExists

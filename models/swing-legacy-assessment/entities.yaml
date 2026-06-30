@@ -1,0 +1,49 @@
+# Legacy Java Swing assessment ontology — entities.
+# Derived from the Trading-Simulation-Platform codebase (a Swing desktop app).
+# This ontology is the reusable "lens" for assessing a Swing estate as-is.
+
+entity UiComponent:
+  description: A Swing UI unit (JFrame / JPanel / JDialog / widget) or a UI-construction unit
+  identity: [componentId]
+  properties:
+    componentId: { type: string, required: true }
+    name: { type: string, required: true }
+    kind: { type: enum, values: [frame, panel, dialog, widget, ui_method] }
+    sourceFile: { type: string }
+
+entity EventHandler:
+  description: An event listener / callback (ActionListener, Timer, WindowListener, DocumentListener)
+  identity: [handlerId]
+  properties:
+    handlerId: { type: string, required: true }
+    name: { type: string, required: true }
+    sourceFile: { type: string }
+
+entity SharedState:
+  description: Mutable state shared by reference across classes (balance, stocksOwned, currentPrices)
+  identity: [stateId]
+  properties:
+    stateId: { type: string, required: true }
+    name: { type: string, required: true }
+
+entity Service:
+  description: A business-logic service that should own domain operations (trading, portfolio)
+  identity: [serviceId]
+  properties:
+    serviceId: { type: string, required: true }
+    name: { type: string, required: true }
+
+entity PersistenceUnit:
+  description: A unit of persistence (a profile/notes file, a store)
+  identity: [unitId]
+  properties:
+    unitId: { type: string, required: true }
+    name: { type: string, required: true }
+    format: { type: enum, values: [delimited_text, json, binary, database] }
+
+entity CredentialStore:
+  description: Where user credentials are stored / verified
+  identity: [storeId]
+  properties:
+    storeId: { type: string, required: true }
+    name: { type: string, required: true }

@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "__system__": {
+      "type": "System",
+      "state": {
+        "name": "jpmc-campaign"
+      }
+    },
+    "agent": {
+      "type": "Module",
+      "state": {
+        "name": "agent",
+        "language": "python",
+        "lineCount": 591,
+        "hasTests": false,
+        "fanIn": 1
+      }
+    },
+    "server": {
+      "type": "Module",
+      "state": {
+        "name": "server",
+        "language": "python",
+        "lineCount": 521,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    },
+    "snowflake_connector": {
+      "type": "Module",
+      "state": {
+        "name": "snowflake_connector",
+        "language": "python",
+        "lineCount": 324,
+        "hasTests": false,
+        "fanIn": 2
+      }
+    },
+    "snowflake_setup": {
+      "type": "Module",
+      "state": {
+        "name": "snowflake_setup",
+        "language": "python",
+        "lineCount": 360,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    },
+    "create_campaign_spreadsheet": {
+      "type": "Module",
+      "state": {
+        "name": "create_campaign_spreadsheet",
+        "language": "python",
+        "lineCount": 842,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    },
+    "app": {
+      "type": "Module",
+      "state": {
+        "name": "app",
+        "language": "javascript",
+        "lineCount": 874,
+        "hasTests": false,
+        "fanIn": 1
+      }
+    },
+    "audit": {
+      "type": "Module",
+      "state": {
+        "name": "audit",
+        "language": "javascript",
+        "lineCount": 40,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    },
+    "schemas": {
+      "type": "Module",
+      "state": {
+        "name": "schemas",
+        "language": "javascript",
+        "lineCount": 103,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    },
+    "taxonomies": {
+      "type": "Module",
+      "state": {
+        "name": "taxonomies",
+        "language": "javascript",
+        "lineCount": 127,
+        "hasTests": false,
+        "fanIn": 0
+      }
+    }
+  },
+  "relationships": [
+    {
+      "name": "dependsOn",
+      "from": "agent",
+      "to": "snowflake_connector"
+    },
+    {
+      "name": "dependsOn",
+      "from": "server",
+      "to": "app"
+    },
+    {
+      "name": "dependsOn",
+      "from": "server",
+      "to": "agent"
+    },
+    {
+      "name": "dependsOn",
+      "from": "server",
+      "to": "snowflake_connector"
+    },
+    {
+      "name": "partOf",
+      "from": "agent",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "server",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "snowflake_connector",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "snowflake_setup",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "create_campaign_spreadsheet",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "app",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "audit",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "schemas",
+      "to": "__system__"
+    },
+    {
+      "name": "partOf",
+      "from": "taxonomies",
+      "to": "__system__"
+    }
+  ]
+}

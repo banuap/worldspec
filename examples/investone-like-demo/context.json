@@ -1,0 +1,33 @@
+{
+  "transition": "COBOLToJava",
+  "entities": {
+    "SETTLEMENT.VSAM": {
+      "type": "Dataset",
+      "state": {
+        "lockMode": "none",
+        "writeAuthority": "GS-COBOL",
+        "activeWriters": 2,
+        "unreconciledItems": 0
+      }
+    },
+    "GS-COBOL": {
+      "type": "Application",
+      "state": { "validationStatus": "passed", "criticality": "systemic", "orchestrationPlatform": "COBOL", "rollbackWindowHours": 24 }
+    },
+    "GS-Java": {
+      "type": "Application",
+      "state": { "validationStatus": "pending", "lifecycle": "active", "criticality": "high", "orchestrationPlatform": "Java", "rollbackWindowHours": 24 }
+    },
+    "JOB.SETTLE.020": { "type": "BatchJob", "state": { "slaMinutes": 90, "durationMinutes": 60 } },
+    "REPORT.DAILY.POSITIONS": { "type": "ReportingSystem", "state": {} }
+  },
+  "relationships": [
+    { "name": "writes", "from": "JOB.SETTLE.020", "to": "SETTLEMENT.VSAM" },
+    { "name": "consumes", "from": "REPORT.DAILY.POSITIONS", "to": "SETTLEMENT.VSAM" }
+  ],
+  "bindings": {
+    "dataset": "SETTLEMENT.VSAM",
+    "source": "GS-COBOL",
+    "target": "GS-Java"
+  }
+}

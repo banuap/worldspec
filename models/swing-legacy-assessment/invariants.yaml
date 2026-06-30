@@ -1,0 +1,90 @@
+# Legacy Java Swing assessment ontology — risk invariants.
+# Each encodes a latent-defect class found in the Trading-Simulation-Platform.
+# See examples/swing-legacy-assessment/FINDINGS.md for the code evidence.
+
+# UI must never be mutated while doing blocking I/O on the Event Dispatch Thread.
+invariant NoBlockingIoOnEDT:
+  appliesTo: EventHandler
+  expression:
+    operator: not
+    operands:
+      - operator: and
+        operands:
+          - operator: "=="
+            left: { path: executesOn }
+            right: "edt"
+          - operator: "=="
+            left: { path: performsBlockingIo }
+            right: true
+  severity: critical
+  onViolation: { action: block_transition }
+
+# Credentials must not be stored in plaintext.
+invariant NoPlaintextCredentials:
+  appliesTo: CredentialStore
+  expression:
+    operator: "!="
+    left: { path: storageScheme }
+    right: "plaintext"
+  severity: critical
+  onViolation: { action: block_transition }
+
+# Each piece of shared state should have at most one writer.
+invariant SingleWriterPerState:
+  appliesTo: SharedState
+  expression:
+    operator: "<="
+    left: { path: writerCount }
+    right: 1
+  severity: high
+  onViolation: { action: warn }
+
+# Domain logic must not live inside view/event code.
+invariant NoBusinessLogicInView:
+  appliesTo: UiComponent
+  expression:
+    operator: "=="
+    left: { path: containsBusinessLogic }
+    right: false
+  severity: high
+  onViolation: { action: warn }
+
+# UI must not be queried/mutated by walking the container tree and string-matching.
+invariant NoStructuralUiTraversal:
+  appliesTo: UiComponent
+  expression:
+    operator: "=="
+    left: { path: traversesContainerTree }
+    right: false
+  severity: high
+  onViolation: { action: warn }
+
+# Units should stay within a maintainable size.
+invariant BoundedUnitComplexity:
+  appliesTo: UiComponent
+  expression:
+    operator: "<="
+    left: { path: lineCount }
+    right: 200
+  severity: high
+  onViolation: { action: warn }
+
+# A view/UI component must not perform persistence directly (layer separation).
+invariant ViewDoesNotPersist:
+  appliesTo: UiComponent
+  expression:
+    operator: "=="
+    left: { path: directlyCallsPersistence }
+    right: false
+  severity: high
+  onViolation: { action: warn }
+
+# Persisted data should use a versioned, robust format (not ad-hoc delimited text).
+invariant RobustPersistenceFormat:
+  appliesTo: PersistenceUnit
+  expression:
+    operator: "=="
+    left: { path: schemaVersioned }
+    right: true
+  severity: warning
+  onViolation: { action: record }

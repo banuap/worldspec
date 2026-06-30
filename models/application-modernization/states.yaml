@@ -1,0 +1,31 @@
+# Application-modernization ontology — states (subset, §13).
+
+state DatasetState:
+  entity: Dataset
+  dimensions:
+    availability: { type: enum, values: [available, unavailable] }
+    lockMode: { type: enum, values: [none, shared, exclusive] }
+    writeAuthority: { type: ref, target: Application }
+    readAuthority: { type: ref, target: Application }
+    activeWriters: { type: int }
+    unreconciledItems: { type: int }
+
+state ApplicationState:
+  entity: Application
+  dimensions:
+    status: { type: enum, values: [running, stopped, shadow] }
+    validationStatus: { type: enum, values: [pending, passed, failed] }
+    rollbackWindowHours: { type: int }
+
+state BatchState:
+  entity: BatchJob
+  dimensions:
+    lastRunStatus: { type: enum, values: [success, failed, skipped] }
+    durationMinutes: { type: int }
+
+state CutoverState:
+  entity: Application
+  dimensions:
+    phase:
+      type: enum
+      values: [planned, shadow, read_transferred, write_transferred, decommissioned]

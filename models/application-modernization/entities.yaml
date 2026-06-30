@@ -1,0 +1,66 @@
+# Application-modernization ontology — entities (subset, §13).
+# First demonstration: COBOL orchestration -> Java replacement candidate.
+
+entity Application:
+  description: A deployable enterprise software system or orchestration layer
+  identity: [applicationId]
+  properties:
+    applicationId: { type: string, required: true }
+    name: { type: string, required: true }
+    criticality: { type: enum, values: [low, medium, high, systemic] }
+    lifecycle: { type: enum, values: [active, modernizing, retiring] }
+    orchestrationPlatform: { type: enum, values: [COBOL, Java] }
+    validationStatus: { type: enum, values: [pending, passed, failed] }
+
+entity Program:
+  description: An executable program belonging to an application
+  identity: [programId]
+  properties:
+    programId: { type: string, required: true }
+    name: { type: string, required: true }
+    language: { type: enum, values: [COBOL, Java] }
+
+entity BatchJob:
+  description: A scheduled batch unit of work
+  identity: [jobId]
+  properties:
+    jobId: { type: string, required: true }
+    name: { type: string, required: true }
+    slaMinutes: { type: int }
+
+entity Dataset:
+  description: A shared data store (e.g. a VSAM dataset)
+  identity: [datasetId]
+  properties:
+    datasetId: { type: string, required: true }
+    name: { type: string, required: true }
+    kind: { type: enum, values: [vsam, file, table] }
+
+entity ReportingSystem:
+  description: A downstream system that consumes produced outputs
+  identity: [systemId]
+  properties:
+    systemId: { type: string, required: true }
+    name: { type: string, required: true }
+
+entity Scheduler:
+  description: The orchestration scheduler that triggers batch jobs
+  identity: [schedulerId]
+  properties:
+    schedulerId: { type: string, required: true }
+    name: { type: string, required: true }
+
+entity Control:
+  description: A reconciliation or governance control
+  identity: [controlId]
+  properties:
+    controlId: { type: string, required: true }
+    name: { type: string, required: true }
+    coverage: { type: enum, values: [none, partial, full] }
+
+entity BusinessCapability:
+  description: A business capability supported by applications
+  identity: [capabilityId]
+  properties:
+    capabilityId: { type: string, required: true }
+    name: { type: string, required: true }

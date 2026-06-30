@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WorldSpec Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <strong>WorldSpec Studio</strong>
+      <span class="tagline">Model the enterprise. Predict the transition. Preserve what matters.</span>
+    </div>
+    <label class="model-picker">
+      Model
+      <select id="modelSelect"></select>
+    </label>
+  </header>
+
+  <nav id="tabs">
+    <button data-tab="create" class="active">Create Model</button>
+    <button data-tab="browser">Model Browser</button>
+    <button data-tab="graph">Dependency Graph</button>
+    <button data-tab="state">State Inspector</button>
+    <button data-tab="simulator">Transition Simulator</button>
+    <button data-tab="evidence">Evidence</button>
+  </nav>
+
+  <main>
+    <!-- 0. Create Model from a repository -->
+    <section id="create" class="tab active">
+      <p class="hint">Point WorldSpec at a GitHub repository (or local path). It surveys the
+        code and generates a model. The compiler validates it before it is saved.</p>
+      <p id="llmStatus" class="kv"></p>
+      <div class="controls">
+        <label>Repository <input id="repoInput" placeholder="https://github.com/owner/repo" style="width:340px" /></label>
+        <label>Model name <input id="repoName" placeholder="my-model" /></label>
+        <label class="kv"><input type="checkbox" id="useLLM" /> use LLM if configured</label>
+        <button id="buildBtn">Build model</button>
+      </div>
+      <div id="buildResult"></div>
+    </section>
+
+    <!-- 1. Model Browser -->
+    <section id="browser" class="tab"></section>
+
+    <!-- 2. Dependency Graph -->
+    <section id="graph" class="tab">
+      <p class="hint">Entities (nodes) and relationships (edges) of the active model.</p>
+      <div id="graphHost"></div>
+    </section>
+
+    <!-- 3. State Inspector -->
+    <section id="state" class="tab">
+      <p class="hint">Paste an observed world (entities + state). Each instance is checked against its invariants.</p>
+      <div class="split">
+        <div>
+          <textarea id="stateContext" spellcheck="false"></textarea>
+          <button id="inspectBtn">Inspect world</button>
+        </div>
+        <div id="stateResult"></div>
+      </div>
+    </section>
+
+    <!-- 4. Transition Simulator -->
+    <section id="simulator" class="tab">
+      <p class="hint">Choose a transition and a context. The runtime builds a candidate future state and checks the preserved invariants.</p>
+      <div class="controls">
+        <label>Transition <select id="transitionSelect"></select></label>
+        <button id="simulateBtn">Simulate</button>
+        <button id="loadSampleBtn" class="secondary">Load sample context</button>
+      </div>
+      <div class="split">
+        <textarea id="simContext" spellcheck="false"></textarea>
+        <div id="simResult"></div>
+      </div>
+    </section>
+
+    <!-- 5. Evidence -->
+    <section id="evidence" class="tab">
+      <div class="controls">
+        <label>Look up decision <input id="decisionInput" placeholder="dec-..." /></label>
+        <button id="evidenceBtn">Fetch</button>
+      </div>
+      <div id="evidenceResult"><p class="hint">Run a simulation to populate evidence, or look one up by id.</p></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

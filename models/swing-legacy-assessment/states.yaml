@@ -1,0 +1,40 @@
+# Legacy Java Swing assessment ontology — states (the assessable dimensions).
+
+state ComponentQualityState:
+  entity: UiComponent
+  dimensions:
+    lineCount: { type: int }
+    responsibilityCount: { type: int }
+    containsBusinessLogic: { type: bool }
+    traversesContainerTree: { type: bool }
+    performsIo: { type: bool }
+
+state LayeringState:
+  entity: UiComponent
+  dimensions:
+    directlyCallsPersistence: { type: bool }
+    directlyCallsAuth: { type: bool }
+
+state ThreadState:
+  entity: EventHandler
+  dimensions:
+    executesOn: { type: enum, values: [edt, worker, background] }
+    performsBlockingIo: { type: bool }
+
+state StateOwnership:
+  entity: SharedState
+  dimensions:
+    writerCount: { type: int }
+    hasSingleOwner: { type: bool }
+
+state CredentialState:
+  entity: CredentialStore
+  dimensions:
+    storageScheme: { type: enum, values: [plaintext, hashed, salted_hashed, external] }
+    encryptionAtRest: { type: bool }
+
+state PersistenceState:
+  entity: PersistenceUnit
+  dimensions:
+    schemaVersioned: { type: bool }
+    parserRobust: { type: bool }

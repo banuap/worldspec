@@ -1,0 +1,17 @@
+# Legacy Java Swing assessment ontology — hardening transition.
+# Frames the recommended remediation: moving from the legacy posture to a
+# hardened one must preserve every risk invariant the assessment encodes.
+
+transition LegacyHardening:
+  action: MoveIoOffEdt
+  from: { posture: legacy }
+  to: { posture: hardened }
+  preserves:
+    - NoBlockingIoOnEDT
+    - NoPlaintextCredentials
+    - SingleWriterPerState
+    - NoBusinessLogicInView
+    - NoStructuralUiTraversal
+    - BoundedUnitComplexity
+    - ViewDoesNotPersist
+    - RobustPersistenceFormat

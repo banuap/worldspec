@@ -1,0 +1,55 @@
+# Application-modernization ontology — actions (subset, §13).
+
+action ShadowRun:
+  inputs:
+    candidate: { type: ref, target: Application }
+  preconditions:
+    - candidate.validationStatus == "pending"
+  effects:
+    - candidate.lifecycle = "modernizing"
+  rollback:
+    - candidate.lifecycle = "active"
+
+action CompareOutputs:
+  inputs:
+    legacy: { type: ref, target: Application }
+    candidate: { type: ref, target: Application }
+  preconditions:
+    - candidate.lifecycle == "modernizing"
+  effects:
+    - candidate.validationStatus = "passed"
+  rollback:
+    - candidate.validationStatus = "pending"
+
+action TransferReadAuthority:
+  inputs:
+    dataset: { type: ref, target: Dataset }
+    target: { type: ref, target: Application }
+  preconditions:
+    - target.validationStatus == "passed"
+  effects:
+    - dataset.readAuthority = target
+  rollback:
+    - dataset.readAuthority = target
+
+action TransferWriteAuthority:
+  inputs:
+    dataset: { type: ref, target: Dataset }
+    source: { type: ref, target: Application }
+    target: { type: ref, target: Application }
+  preconditions:
+    - target.validationStatus == "passed"
+    - dataset.lockMode == "none"
+  effects:
+    - dataset.writeAuthority = target
+  rollback:
+    - dataset.writeAuthority = source
+
+action Rollback:
+  inputs:
+    dataset: { type: ref, target: Dataset }
+    source: { type: ref, target: Application }
+  effects:
+    - dataset.writeAuthority = source
+  rollback:
+    - dataset.writeAuthority = source
