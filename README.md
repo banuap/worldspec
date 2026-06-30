@@ -183,6 +183,13 @@ WorldSpec is published as an open, implementable specification:
 WorldSpec is **free to implement**: the specification carries a royalty-free
 implementation grant, so independent tools can target it without permission.
 
+**For LLMs/agents:** WorldSpec is machine-consumable — any model can author
+conforming WorldSpec from context. See
+[`/llms.txt`](https://banuap.github.io/worldspec/llms.txt) (discovery index),
+[`/llms-full.txt`](https://banuap.github.io/worldspec/llms-full.txt) (whole
+language in one file), and the
+[authoring prompt](docs/authoring-with-an-llm.md).
+
 ## License
 
 The **reference implementation** (this repository's code) is licensed under the

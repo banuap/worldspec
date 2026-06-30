@@ -41,6 +41,15 @@ explicit, royalty-free grant to build conforming tools (see the spec's
 *Status of This Document*). A [conformance test suite](https://github.com/banuap/worldspec/tree/main/conformance)
 lets independent implementations check themselves.
 
+## For LLMs and agents
+
+WorldSpec is built to be machine-consumable: any model can author conforming
+WorldSpec from context.
+
+- [`/llms.txt`](llms.txt) — a machine-discoverable index of the key resources ([llmstxt.org](https://llmstxt.org) convention).
+- [`/llms-full.txt`](llms-full.txt) — the entire language + schema + a worked example in one file, for pasting into a context window.
+- [Authoring with an LLM](authoring-with-an-llm) — a paste-ready system prompt.
+
 ## Cite
 
 See [`CITATION.cff`](https://github.com/banuap/worldspec/blob/main/CITATION.cff)

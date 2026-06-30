@@ -1,0 +1,224 @@
+# WorldSpec — full single-file language reference (v0.1)
+
+This one file contains everything an LLM needs to read or write conforming
+WorldSpec: what it is, the complete language rules, the grammars, the canonical
+IR, the diagnostics, and a complete worked example. Canonical spec:
+https://banuap.github.io/worldspec/spec/0.1/
+
+================================================================================
+1. WHAT IT IS
+================================================================================
+WorldSpec is a declarative language for describing a software system (in any
+language or product) as facts that can be validated and reasoned over before the
+system is changed. A *model* describes a system with six constructs and compiles
+to a neutral canonical IR. The language is technology-agnostic and imposes no
+domain vocabulary; the modeler defines their own entities, rules, and actions.
+
+A model is a directory of one or more .yaml/.yml documents, merged into one
+namespace before validation. Construct names MUST be unique across the model.
+The compiler never uses `eval`; expressions are structured ASTs.
+
+================================================================================
+2. THE SIX CONSTRUCTS
+================================================================================
+- entity        A thing that exists, with stable identity and properties.
+- relationship  A typed, directed association between two entities.
+- state         The mutable dimensions of an entity that change over time.
+- invariant     A boolean rule over an entity that MUST always hold.
+- action        A permitted change, with preconditions, effects, and rollback.
+- transition    A larger move that applies an action and preserves invariants.
+
+Key idea: `entity` properties are static; `state` dimensions are what changes.
+Invariants and actions reason over state, so the things that can break are
+exactly the things you declared as mutable.
+
+================================================================================
+3. DOCUMENT AND NAMING RULES
+================================================================================
+Each top-level mapping key has the form "<construct> <Name>".
+- <construct> is one of the six lower-case keywords above.
+- <Name> is UpperCamelCase (^[A-Z][A-Za-z0-9_]*$) for every construct EXCEPT
+  relationship, whose names are lowerCamelCase (^[a-z][A-Za-z0-9_]*$).
+- Property and state-dimension names are lowerCamelCase.
+Malformed keys, unknown construct keywords, or bad name case -> WS-SYN-* errors.
+
+================================================================================
+4. TYPE SYSTEM
+================================================================================
+Closed type vocabulary for properties, inputs, and state dimensions:
+  string    UTF-8 text
+  int       integer
+  float     floating point
+  bool      boolean
+  datetime  ISO-8601 timestamp
+  enum      one value from a fixed list; REQUIRES  values: [ ... ]  (non-empty, unique)
+  ref       reference to an entity instance; REQUIRES  target: <EntityName>
+A typeDecl is a mapping, e.g.  { type: string, required: true }  or
+{ type: enum, values: [low, high] }  or  { type: ref, target: Account }.
+(`required` applies to properties/inputs; state dimensions are never required.)
+
+================================================================================
+5. CONSTRUCT SHAPES
+================================================================================
+entity <Name>:
+  description: <text>            # optional
+  identity: [ <propName>, ... ]  # required, non-empty; each MUST be a declared property
+  properties:                    # required
+    <propName>: <typeDecl>
+
+relationship <name>:             # lowerCamelCase
+  from: <Entity>                 # required, declared entity
+  to: <Entity>                   # required, declared entity
+  cardinality: one | many        # required
+  temporal: <bool>               # optional, default false
+
+state <Name>:
+  entity: <Entity>               # required, declared entity
+  dimensions:                    # required
+    <dimName>: <typeDecl>
+
+invariant <Name>:
+  appliesTo: <Entity>            # required, declared entity
+  expression: <expr>             # required (see section 6)
+  severity: info | warning | high | critical   # required
+  onViolation:                   # optional
+    action: block_transition | warn | record   # default warn
+
+action <Name>:
+  inputs:                        # required
+    <inputName>: { type: ref, target: <Entity> }   # typically refs
+  preconditions:                 # optional, list of predicate strings (section 7)
+    - "<predicate>"
+  effects:                       # required, non-empty, list of assignment strings (section 7)
+    - "<assignment>"
+  rollback:                      # optional; if absent the action is irreversible (warning)
+    - "<assignment>"
+
+transition <Name>:
+  action: <Action>               # required, declared action
+  from: { ... }                  # optional, free-form context map
+  to:   { ... }                  # optional, free-form context map
+  preserves: [ <Invariant>, ... ]# optional, declared invariant names
+
+================================================================================
+6. INVARIANT EXPRESSION GRAMMAR (structured AST, never free text, never eval)
+================================================================================
+expression  = comparison | logical
+comparison  = { operator: <cmp>, left: <operand>, right: <operand> }
+logical     = { operator: <bool>, operands: [ <expression>, ... ] }   # `not` takes exactly one
+operand     = <literal scalar> | { path: "<dotted.path>" } | { function: <fn>, path: "<dotted.path>" }
+<cmp>       = "==" | "!=" | "<" | "<=" | ">" | ">="
+<bool>      = and | or | not
+<fn>        = count | sum | min | max | exists
+Every path MUST resolve to a declared property or state dimension of the
+invariant's appliesTo entity (else WS-SEM-0050).
+
+================================================================================
+7. ACTION PREDICATE / ASSIGNMENT MINI-LANGUAGE (single-line, safe, never eval)
+================================================================================
+predicate   = path <cmp> operand     e.g.  dataset.lockMode == "none"
+assignment  = path "=" operand        e.g.  dataset.writeAuthority = target
+operand     = path | string | number | bool
+path        = ident ("." ident)*
+Strings may be single- or double-quoted; true/false are booleans; numbers are
+int/float. The leading ident of every path MUST be a declared input name of the
+action (else WS-SEM-0031).
+
+================================================================================
+8. CANONICAL IR (the stable downstream contract)
+================================================================================
+Every construct compiles to a neutral JSON object with a `kind` discriminator.
+The whole model compiles to:
+  { "irVersion": "0.1.0", "model": "<name>",
+    "constructs": [ { "kind": "...", "name": "...", ... }, ... ] }
+Consumers depend on the IR, never on the raw YAML.
+
+================================================================================
+9. DIAGNOSTICS
+================================================================================
+WS-SYN-#### : syntax / structural errors (bad key, missing field, bad type,
+              malformed expression, bad name case).
+WS-SEM-#### : semantic errors (unknown reference, duplicate name, dangling
+              invariant in a transition, identity property not declared, path
+              that does not resolve, ...).
+Any error-severity diagnostic fails validation with a non-zero exit code.
+
+================================================================================
+10. CONFORMANCE (summary)
+================================================================================
+A conforming model uses only the six constructs and the closed type vocabulary,
+satisfies the naming rules, has expressions/action bodies per sections 6-7, and
+produces zero error-severity diagnostics. A conforming validator accepts all
+conforming models, rejects non-conforming ones with at least one error, and
+never executes model-supplied strings.
+
+================================================================================
+11. COMPLETE WORKED EXAMPLE (validates cleanly: 7 constructs, 0 warnings)
+================================================================================
+# Two services and a shared datastore; the rule "only one writer at a time"
+# must hold across a platform cutover.
+
+entity Service:
+  description: A deployable software service (any language or runtime)
+  identity: [serviceId]
+  properties:
+    serviceId: { type: string, required: true }
+    name:      { type: string, required: true }
+    platform:  { type: enum, values: [legacy, target] }
+
+entity Datastore:
+  description: A store of record the services read and write
+  identity: [datastoreId]
+  properties:
+    datastoreId: { type: string, required: true }
+    name:        { type: string, required: true }
+
+relationship writes:
+  from: Service
+  to: Datastore
+  cardinality: many
+
+state DatastoreState:
+  entity: Datastore
+  dimensions:
+    writeAuthority: { type: ref, target: Service }
+    activeWriters:  { type: int }
+
+invariant SingleWriter:
+  appliesTo: Datastore
+  expression:
+    operator: "<="
+    left: { function: count, path: activeWriters }
+    right: 1
+  severity: critical
+  onViolation:
+    action: block_transition
+
+action TransferWriteAuthority:
+  inputs:
+    datastore: { type: ref, target: Datastore }
+    source:    { type: ref, target: Service }
+    target:    { type: ref, target: Service }
+  preconditions:
+    - datastore.activeWriters == 1
+  effects:
+    - datastore.writeAuthority = target
+  rollback:
+    - datastore.writeAuthority = source
+
+transition PlatformCutover:
+  action: TransferWriteAuthority
+  from: { platform: legacy }
+  to:   { platform: target }
+  preserves:
+    - SingleWriter
+
+================================================================================
+12. WORKFLOW FOR GENERATING WORLDSPEC
+================================================================================
+1. Emit ONLY valid WorldSpec YAML (no prose, no code fences).
+2. Validate:  worldspec validate <dir>  (or the model JSON Schema for structure).
+3. If there are WS-SYN-*/WS-SEM-* diagnostics, fix and regenerate.
+The reference implementation and JSON Schema:
+  https://github.com/banuap/worldspec
+  https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json
