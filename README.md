@@ -15,6 +15,9 @@ worked example is **application modernization and cutover assurance** — a
 COBOL/JCL/VSAM → Java transition — chosen as one concrete, high-stakes
 illustration, not as a limit.
 
+New here? Start with **[`docs/what-is-worldspec.md`](docs/what-is-worldspec.md)**
+— a plain-language overview with a complete example model.
+
 ## What's in this build (Milestones 1–4)
 
 **Milestone 1 — language & compiler** (instructions §23):
