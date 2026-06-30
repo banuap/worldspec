@@ -1,0 +1,17 @@
+# GitHub Pages (Jekyll) configuration for the WorldSpec specification site.
+# Pages is built from this /docs folder; this file is the site root config.
+title: WorldSpec
+description: >-
+  A declarative language and compiler for modeling software systems as
+  entities, relationships, states, invariants, actions, and transitions.
+theme: jekyll-theme-cayman
+
+# Project-pages base path: the site is served at https://<owner>.github.io/worldspec/
+# Update `url`/`baseurl` (or remove them) if you move to a custom domain or w3id redirect.
+url: "https://banuap.github.io"
+baseurl: "/worldspec"
+
+# Keep the published site focused: these are kept in the repo but not built as pages.
+exclude:
+  - adr/
+  - open-questions.md

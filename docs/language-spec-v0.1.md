@@ -1,5 +1,10 @@
 # WorldSpec Language Specification — v0.1
 
+> **The normative, published specification lives at
+> <https://banuap.github.io/worldspec/spec/0.1/>** (status-stamped, with the
+> conformance section, EBNF grammars, and the implementation grant). This page
+> is the implementation-oriented reference and tracks the same v0.1 language.
+
 > Status: Draft / implemented in the v0.1 compiler.
 > Authoring format: **YAML**. The runtime depends on the compiled **canonical IR**, never on raw YAML (ADR-002).
 

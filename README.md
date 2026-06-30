@@ -164,10 +164,31 @@ python -m pytest --cov=worldspec --cov-report=term-missing
 See `AGENTS.md` for the operating rules this codebase is built under and
 `docs/open-questions.md` for recorded assumptions and deferred work.
 
+## Specification
+
+WorldSpec is published as an open, implementable specification:
+
+- **Spec (v0.1):** <https://banuap.github.io/worldspec/spec/0.1/> — syntax, type
+  system, expression/action grammars (EBNF), canonical IR, and conformance.
+- **Namespace:** <https://banuap.github.io/worldspec/ns/0.1/>
+- **Model JSON Schema:** [`docs/schemas/worldspec-model-0.1.schema.json`](docs/schemas/worldspec-model-0.1.schema.json)
+- **Conformance suite:** [`conformance/`](conformance/) · **Governance/versioning:** [`GOVERNANCE.md`](GOVERNANCE.md)
+- **Publishing the spec (Pages, w3id, Zenodo, IANA):** [`PUBLISHING.md`](PUBLISHING.md)
+
+WorldSpec is **free to implement**: the specification carries a royalty-free
+implementation grant, so independent tools can target it without permission.
+
 ## License
 
-Licensed under the [GNU Affero General Public License v3.0 or later](LICENSE) (AGPL-3.0-or-later).
-
+The **reference implementation** (this repository's code) is licensed under the
+[GNU Affero General Public License v3.0 or later](LICENSE) (AGPL-3.0-or-later).
 Note: the AGPL requires that if you run a modified version of this software to
 provide a network service, you must make the corresponding source code
 available to users of that service.
+
+The **specification** (the `docs/spec/`, `docs/ns/`, `docs/schemas/`, and
+`conformance/` artifacts) is licensed separately under
+[Creative Commons Attribution 4.0 International](LICENSE-spec) (CC BY 4.0), with
+a royalty-free grant to build conforming implementations. The AGPL copyleft
+applies only to this repository's code, never to the language or to independent
+implementations.

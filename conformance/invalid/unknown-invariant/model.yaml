@@ -1,0 +1,18 @@
+# Conformance (MUST FAIL): a transition preserves an invariant that is not declared.
+entity Account:
+  identity: [accountId]
+  properties:
+    accountId: { type: string, required: true }
+
+action Touch:
+  inputs:
+    account: { type: ref, target: Account }
+  effects:
+    - account.accountId = "x"
+  rollback:
+    - account.accountId = "y"
+
+transition BadCutover:
+  action: Touch
+  preserves:
+    - DoesNotExist

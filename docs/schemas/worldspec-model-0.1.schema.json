@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json",
+  "title": "WorldSpec model document (v0.1)",
+  "description": "Structural schema for a single WorldSpec YAML document. Top-level keys have the form '<construct> <Name>'. Cross-reference and path-resolution rules are semantic and are NOT enforced here; see https://banuap.github.io/worldspec/spec/0.1/.",
+  "type": "object",
+  "minProperties": 1,
+  "patternProperties": {
+    "^entity [A-Z][A-Za-z0-9_]*$": { "$ref": "#/$defs/entityBody" },
+    "^relationship [a-z][A-Za-z0-9_]*$": { "$ref": "#/$defs/relationshipBody" },
+    "^state [A-Z][A-Za-z0-9_]*$": { "$ref": "#/$defs/stateBody" },
+    "^invariant [A-Z][A-Za-z0-9_]*$": { "$ref": "#/$defs/invariantBody" },
+    "^action [A-Z][A-Za-z0-9_]*$": { "$ref": "#/$defs/actionBody" },
+    "^transition [A-Z][A-Za-z0-9_]*$": { "$ref": "#/$defs/transitionBody" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "typeDecl": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["string", "int", "float", "bool", "enum", "ref", "datetime"] },
+        "required": { "type": "boolean" },
+        "values": { "type": "array", "minItems": 1, "uniqueItems": true },
+        "target": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "enum" } } },
+          "then": { "required": ["values"] }
+        },
+        {
+          "if": { "properties": { "type": { "const": "ref" } } },
+          "then": { "required": ["target"] }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "fieldMap": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": { "^[a-z][A-Za-z0-9_]*$": { "$ref": "#/$defs/typeDecl" } },
+      "additionalProperties": false
+    },
+    "entityBody": {
+      "type": "object",
+      "required": ["identity", "properties"],
+      "properties": {
+        "description": { "type": "string" },
+        "identity": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^[a-z][A-Za-z0-9_]*$" } },
+        "properties": { "$ref": "#/$defs/fieldMap" }
+      },
+      "additionalProperties": false
+    },
+    "relationshipBody": {
+      "type": "object",
+      "required": ["from", "to", "cardinality"],
+      "properties": {
+        "from": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
+        "to": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
+        "cardinality": { "enum": ["one", "many"] },
+        "temporal": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "stateBody": {
+      "type": "object",
+      "required": ["entity", "dimensions"],
+      "properties": {
+        "entity": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
+        "dimensions": { "$ref": "#/$defs/fieldMap" }
+      },
+      "additionalProperties": false
+    },
+    "operand": {
+      "oneOf": [
+        { "type": ["number", "string", "boolean"] },
+        { "type": "object", "required": ["path"], "properties": { "path": { "type": "string" } }, "additionalProperties": false },
+        {
+          "type": "object",
+          "required": ["function", "path"],
+          "properties": {
+            "function": { "enum": ["count", "sum", "min", "max", "exists"] },
+            "path": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "expression": {
+      "type": "object",
+      "required": ["operator"],
+      "oneOf": [
+        {
+          "required": ["operator", "left", "right"],
+          "properties": {
+            "operator": { "enum": ["==", "!=", "<", "<=", ">", ">="] },
+            "left": { "$ref": "#/$defs/operand" },
+            "right": { "$ref": "#/$defs/operand" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "required": ["operator", "operands"],
+          "properties": {
+            "operator": { "enum": ["and", "or", "not"] },
+            "operands": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/expression" } }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "invariantBody": {
+      "type": "object",
+      "required": ["appliesTo", "expression", "severity"],
+      "properties": {
+        "appliesTo": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
+        "expression": { "$ref": "#/$defs/expression" },
+        "severity": { "enum": ["info", "warning", "high", "critical"] },
+        "onViolation": {
+          "type": "object",
+          "properties": { "action": { "enum": ["block_transition", "warn", "record"] } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "actionBody": {
+      "type": "object",
+      "required": ["inputs", "effects"],
+      "properties": {
+        "inputs": { "$ref": "#/$defs/fieldMap" },
+        "preconditions": { "type": "array", "items": { "type": "string" } },
+        "effects": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "rollback": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "transitionBody": {
+      "type": "object",
+      "required": ["action"],
+      "properties": {
+        "action": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" },
+        "from": { "type": "object" },
+        "to": { "type": "object" },
+        "preserves": { "type": "array", "items": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9_]*$" } }
+      },
+      "additionalProperties": false
+    }
+  }
+}

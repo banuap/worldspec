@@ -1,0 +1,5 @@
+# Conformance (MUST FAIL): entity name must be UpperCamelCase.
+entity account:
+  identity: [accountId]
+  properties:
+    accountId: { type: string, required: true }

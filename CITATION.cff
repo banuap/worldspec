@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use WorldSpec, please cite both the software and the specification."
+title: "WorldSpec: A Declarative Language for Modeling Software Systems"
+abstract: >-
+  WorldSpec is a declarative language and compiler for modeling software
+  systems — in any language or product — as entities, relationships, states,
+  invariants, actions, and transitions, so that proposed changes can be checked
+  against critical invariants before execution.
+type: software
+authors:
+  - name: "The WorldSpec Project"
+repository-code: "https://github.com/banuap/worldspec"
+url: "https://banuap.github.io/worldspec/"
+license: AGPL-3.0-or-later
+version: "0.1.0"
+date-released: "2026-06-30"
+keywords:
+  - declarative-modeling
+  - invariants
+  - state-transition
+  - application-modernization
+  - specification
+references:
+  - type: standard
+    title: "WorldSpec Language Specification 0.1"
+    url: "https://banuap.github.io/worldspec/spec/0.1/"
+    authors:
+      - name: "The WorldSpec Project"
+    license: CC-BY-4.0

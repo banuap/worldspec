@@ -1,0 +1,7 @@
+# Conformance: a minimal conforming model (one entity).
+entity Account:
+  description: A minimal entity
+  identity: [accountId]
+  properties:
+    accountId: { type: string, required: true }
+    balance:   { type: float }

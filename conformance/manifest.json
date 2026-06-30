@@ -1,0 +1,24 @@
+{
+  "suiteVersion": "0.1.0",
+  "language": "0.1",
+  "spec": "https://banuap.github.io/worldspec/spec/0.1/",
+  "cases": [
+    {
+      "path": "valid/minimal",
+      "expect": "ok",
+      "description": "A minimal conforming model (single entity)."
+    },
+    {
+      "path": "invalid/unknown-invariant",
+      "expect": "error",
+      "code": "WS-SEM-0042",
+      "description": "A transition that preserves an undeclared invariant must fail."
+    },
+    {
+      "path": "invalid/bad-name-case",
+      "expect": "error",
+      "code": "WS-SYN-0012",
+      "description": "An entity name that is not UpperCamelCase must fail."
+    }
+  ]
+}
