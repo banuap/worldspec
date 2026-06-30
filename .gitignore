@@ -13,3 +13,4 @@ venv/
 .env
 .worldspec/
 WORLDSPEC_AGENT_INSTRUCTIONS.md
+AGENTS.md
