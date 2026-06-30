@@ -41,8 +41,9 @@ return explainable **evidence**:
 - a transition engine that builds a candidate future state, checks the preserved
   invariants, scores risk (explainable weighted formula), and derives a safer
   trajectory **from the model itself**,
-- `worldspec simulate`, plus two demo models (`application-modernization`,
-  `swing-legacy-assessment`),
+- `worldspec simulate`, plus demo models (`application-modernization`,
+  `swing-legacy-assessment`, and `short-interest-rebate` — a broker-dealer
+  securities-lending estate, see [`docs/example-short-interest-rebate.md`](docs/example-short-interest-rebate.md)),
 - a test suite (**77 tests**, 91% total; compiler core ≥ 90%, runtime core ≥ 90%).
 
 **Experience layer — REST API + Studio** (§12, §16): a FastAPI service exposes

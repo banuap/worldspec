@@ -1,0 +1,169 @@
+# Short Interest Rebate (securities-lending) model — broker-dealer modernization
+# Models a stock-loan book and the rules that must hold while the rebate
+# calculation engine is migrated from a legacy platform to a target platform.
+
+# ---------------------------------------------------------------- entities
+entity Security:
+  description: A borrowable instrument (equity) identified by CUSIP/ticker
+  identity: [securityId]
+  properties:
+    securityId: { type: string, required: true }
+    ticker:     { type: string, required: true }
+    cusip:      { type: string }
+
+entity Counterparty:
+  description: A borrower or lender of securities (hedge fund, custodian, desk)
+  identity: [counterpartyId]
+  properties:
+    counterpartyId: { type: string, required: true }
+    name:           { type: string, required: true }
+    role:           { type: enum, values: [borrower, lender, both] }
+
+entity StockLoan:
+  description: A single securities-lending contract (one borrow of one security)
+  identity: [loanId]
+  properties:
+    loanId:    { type: string, required: true }
+    tradeDate: { type: datetime }
+
+# ----------------------------------------------------------- relationships
+relationship onSecurity:
+  from: StockLoan
+  to: Security
+  cardinality: one
+
+relationship borrowedBy:
+  from: StockLoan
+  to: Counterparty
+  cardinality: one
+
+relationship lentBy:
+  from: StockLoan
+  to: Counterparty
+  cardinality: one
+
+# ------------------------------------------------------------------ states
+state SecurityState:
+  entity: Security
+  dimensions:
+    marketPrice:       { type: float }
+    availableQuantity: { type: int }
+    hardToBorrow:      { type: bool }
+    borrowFeeBps:      { type: int }
+
+state LoanState:
+  entity: StockLoan
+  dimensions:
+    status:                    { type: enum, values: [pending, open, recalled, returned, settled, boughtIn] }
+    loanQuantity:              { type: int }
+    collateralPosted:          { type: float }
+    marketValue:               { type: float }
+    collateralizationRatioBps: { type: int }
+    benchmarkRateBps:          { type: int }
+    rebateRateBps:             { type: int }
+    accruedRebate:             { type: float }
+    marginCallOpen:            { type: bool }
+
+# -------------------------------------------------------------- invariants
+invariant FullyCollateralized:
+  appliesTo: StockLoan
+  expression:
+    operator: ">="
+    left: { path: collateralizationRatioBps }
+    right: 10200
+  severity: critical
+  onViolation:
+    action: block_transition
+
+invariant RebateWithinBenchmark:
+  appliesTo: StockLoan
+  expression:
+    operator: "<="
+    left: { path: rebateRateBps }
+    right: { path: benchmarkRateBps }
+  severity: high
+  onViolation:
+    action: warn
+
+invariant PositiveLoanQuantity:
+  appliesTo: StockLoan
+  expression:
+    operator: ">"
+    left: { path: loanQuantity }
+    right: 0
+  severity: high
+  onViolation:
+    action: block_transition
+
+invariant NoOversupply:
+  appliesTo: Security
+  expression:
+    operator: ">="
+    left: { path: availableQuantity }
+    right: 0
+  severity: critical
+  onViolation:
+    action: block_transition
+
+# ----------------------------------------------------------------- actions
+action OpenLoan:
+  inputs:
+    loan: { type: ref, target: StockLoan }
+  preconditions:
+    - loan.status == "pending"
+    - loan.collateralizationRatioBps >= 10200
+  effects:
+    - loan.status = "open"
+  rollback:
+    - loan.status = "pending"
+
+action PostMarginCall:
+  inputs:
+    loan: { type: ref, target: StockLoan }
+  preconditions:
+    - loan.marginCallOpen == true
+  effects:
+    - loan.collateralizationRatioBps = 10200
+    - loan.marginCallOpen = false
+  rollback:
+    - loan.marginCallOpen = true
+
+action RecallLoan:
+  inputs:
+    loan: { type: ref, target: StockLoan }
+  preconditions:
+    - loan.status == "open"
+  effects:
+    - loan.status = "recalled"
+  rollback:
+    - loan.status = "open"
+
+action ReturnShares:
+  inputs:
+    loan: { type: ref, target: StockLoan }
+  preconditions:
+    - loan.status == "recalled"
+  effects:
+    - loan.status = "returned"
+  rollback:
+    - loan.status = "recalled"
+
+action SettleLoan:
+  inputs:
+    loan: { type: ref, target: StockLoan }
+  preconditions:
+    - loan.status == "returned"
+  effects:
+    - loan.status = "settled"
+  rollback:
+    - loan.status = "returned"
+
+# ------------------------------------------------------------- transitions
+transition RebateEngineCutover:
+  action: PostMarginCall
+  from: { rebateEngine: legacy }
+  to:   { rebateEngine: target }
+  preserves:
+    - FullyCollateralized
+    - RebateWithinBenchmark
+    - PositiveLoanQuantity

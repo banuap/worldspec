@@ -155,6 +155,8 @@ and you get:
 - **Author your own model:** `docs/usage.md` — a step-by-step guide for turning
   a real codebase (any stack) into a validated model.
 - **Full grammar:** `docs/language-spec-v0.1.md`.
-- **A larger worked example:** `docs/demo-scenario.md` and
-  `models/application-modernization/` — a COBOL/JCL/VSAM → Java cutover.
+- **Larger worked examples:** `docs/demo-scenario.md` and
+  `models/application-modernization/` — a COBOL/JCL/VSAM → Java cutover;
+  `docs/example-short-interest-rebate.md` and `models/short-interest-rebate/` —
+  a broker-dealer securities-lending (short-interest rebate) estate.
 - **Why it's built this way:** `docs/architecture.md` and `docs/adr/`.
