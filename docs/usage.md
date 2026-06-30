@@ -1,8 +1,11 @@
 # Using WorldSpec against a codebase
 
-This is a step-by-step guide for taking a real application estate (a COBOL/JCL
-batch suite, a Java service, a mixed legacy + modern portfolio) and turning it
-into a validated, compiled WorldSpec model.
+This is a step-by-step guide for taking a real application estate — in **any
+language or product**: a mainframe batch suite, a Java or .NET service fleet, a
+Python data pipeline, a database platform, a mixed legacy + modern portfolio —
+and turning it into a validated, compiled WorldSpec model. The examples below
+use a COBOL→Java modernization for concreteness, but every step is
+technology-neutral.
 
 ## Shortcut: generate a model from a repository
 
@@ -27,8 +30,9 @@ matter, the rules that must hold — and the compiler **validates that descripti
 and compiles it to a governed package** (`.wspkg`).
 
 > **Automated source ingestion is not built yet.** The instructions describe
-> source adapters (COBOL, JCL, VSAM metadata, scheduler, events) that would read
-> a codebase and emit a draft model. Those are a later milestone (see
+> source adapters (code, config, scheduler metadata, data catalogs, events —
+> with technology-specific variants per stack) that would read a codebase and
+> emit a draft model. Those are a later milestone (see
 > `docs/open-questions.md`). Today you author the model — by hand, or with an
 > LLM/agent that reads the code and emits WorldSpec YAML, which you then run
 > through this compiler.
@@ -80,15 +84,15 @@ can copy from.)
 Walk the codebase and list the *things that exist*. Map source artifacts to
 entities:
 
-| In the codebase…                              | WorldSpec entity        |
-|-----------------------------------------------|-------------------------|
-| A deployable app / orchestration layer        | `Application`           |
-| A COBOL program / Java class-of-record        | `Program`               |
-| A JCL/scheduler job step                      | `BatchJob`              |
-| A VSAM file / flat file / dataset             | `Dataset`               |
-| A downstream report/consumer system           | `ReportingSystem`       |
-| A reconciliation/governance check             | `Control`               |
-| The scheduler itself                          | `Scheduler`             |
+| In the codebase…                                          | WorldSpec entity        |
+|-----------------------------------------------------------|-------------------------|
+| A deployable app / service / orchestration layer          | `Application`           |
+| A unit of code (COBOL program, Java/.NET class, module)   | `Program`               |
+| A scheduled unit of work (JCL step, cron job, Airflow DAG)| `BatchJob`              |
+| A data store (VSAM file, table, topic, object, dataset)   | `Dataset`               |
+| A downstream report/consumer system                       | `ReportingSystem`       |
+| A reconciliation/governance check                         | `Control`               |
+| The scheduler/orchestrator itself                         | `Scheduler`             |
 
 For each, record the **static** facts as `properties` (an identity key plus
 descriptive fields):
@@ -291,8 +295,9 @@ else:
 `CompileResult` exposes `.ok`, `.errors`, `.warnings`, `.model` (typed AST), and
 `.ir` (JSON). Use `validate_text` / `compile_text` for in-memory strings.
 
-This is exactly the integration point a future **source adapter** would use:
-read COBOL/JCL/VSAM metadata → emit WorldSpec YAML → `compile_text` → `.wspkg`.
+This is exactly the integration point a future **source adapter** would use (for
+any stack): read source/config/schedule metadata → emit WorldSpec YAML →
+`compile_text` → `.wspkg`.
 
 ---
 

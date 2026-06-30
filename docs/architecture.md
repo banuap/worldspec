@@ -7,8 +7,13 @@ Experience (CLI | Studio | REST API)
    -> Runtime (Registry | State | Invariants | Actions | Transitions | Evidence)
       -> Compiler (Parser | AST | Validation | IR | Generators)
          -> Persistence (Neo4j | PostgreSQL | pgvector | Object storage)
-            -> Source adapters (COBOL | JCL | VSAM | Scheduler | Events)
+            -> Source adapters (code | config | schedulers | data catalogs | events)
 ```
+
+Source adapters are technology-specific plugins: a COBOL/JCL/VSAM set for
+mainframe estates, but equally a Java/Spring, .NET, Python, or
+container/Kubernetes set. Each adapter's job is the same — read a real system
+and emit a draft WorldSpec model — so the layers above stay language-neutral.
 
 ## What this build contains
 

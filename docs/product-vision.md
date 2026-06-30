@@ -27,11 +27,24 @@ Observe current system
   -> learn from prediction error
 ```
 
-## First use case
+## Scope: any language, any software product
 
-Application modernization and cutover assurance for legacy systems, beginning
-with a COBOL/JCL/VSAM → Java transition (see `demo-scenario.md`). We deliver a
-narrow, working vertical slice first — not a generalized ontology platform.
+WorldSpec is **technology-agnostic**. The six constructs — entity,
+relationship, state, invariant, action, transition — describe *any* software
+system regardless of its implementation language, runtime, or vintage: a
+mainframe batch suite, a microservice fleet, a database platform, a packaged
+product, a cloud re-platforming, or a mixed legacy-and-modern portfolio. If
+there are things that exist, rules that must hold, and risky changes to make,
+WorldSpec can represent and simulate them.
+
+## First worked example
+
+The bundled example is application-modernization and cutover assurance — a
+COBOL/JCL/VSAM → Java transition (see `demo-scenario.md`), chosen as one
+concrete, high-stakes illustration. It is an *example, not a limit*: the same
+language models a Java→Kotlin migration, a database cutover, or an API
+deprecation just as well. We deliver a narrow, working vertical slice first —
+not a generalized ontology platform — and the modeling language stays neutral.
 
 ## Where we are
 

@@ -1,5 +1,10 @@
 # Demo scenario — COBOL → Java orchestration cutover
 
+> **This is one worked example, not the limit of WorldSpec.** A COBOL→Java
+> cutover is a deliberately high-stakes illustration; the same six constructs
+> model any language, product, or migration (a service re-platforming, a
+> database cutover, an API deprecation). See `docs/product-vision.md`.
+
 The `models/application-modernization/` model is a synthetic financial-services
 estate (instructions §4). It exists to answer one question:
 

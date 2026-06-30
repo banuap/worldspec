@@ -152,14 +152,19 @@ action TransferWriteAuthority:
 ### 3.6 `transition`
 
 ```yaml
-transition COBOLToJava:
+transition PlatformCutover:
   action: TransferWriteAuthority
-  from: { orchestrationPlatform: COBOL }
-  to:   { orchestrationPlatform: Java }
+  from: { platform: legacy }
+  to:   { platform: target }
   preserves:
     - SingleWriter
     - SettlementBalance
 ```
+
+The `from`/`to` context maps are free-form, so the same construct models any
+migration — a language port, a database cutover, a cloud re-platforming. The
+bundled example (`models/application-modernization/`) instantiates this as a
+concrete `COBOLToJava` transition; see `docs/demo-scenario.md`.
 
 - `action` (required): a declared action.
 - `from`, `to` (optional): free-form context maps describing the world before /

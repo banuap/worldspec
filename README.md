@@ -8,8 +8,12 @@ transitions**. It gives humans and AI agents a shared, governed representation
 of an application estate so that proposed changes can be checked against
 critical invariants *before* execution.
 
-The first product use case is **application modernization and cutover
-assurance** — beginning with a COBOL/JCL/VSAM → Java transition.
+WorldSpec is **technology-agnostic** — the same six constructs model any
+software product in any language (mainframe batch, microservices, data
+pipelines, database platforms, cloud re-platformings). The first bundled
+worked example is **application modernization and cutover assurance** — a
+COBOL/JCL/VSAM → Java transition — chosen as one concrete, high-stakes
+illustration, not as a limit.
 
 ## What's in this build (Milestones 1–4)
 

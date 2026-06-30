@@ -1,5 +1,11 @@
 # Application-modernization ontology
 
+> This vocabulary is the **example domain** modeled for the bundled demo, not a
+> fixed schema WorldSpec imposes. The language itself is technology-neutral
+> (see `docs/language-spec-v0.1.md`); you define whatever entities, states, and
+> invariants your own product needs. The entities below happen to suit a
+> modernization estate.
+
 This is the meta-model the demo (`models/application-modernization/`) instantiates.
 The full target vocabulary is in instructions §13; the table below marks what is
 modeled in v0.1.
