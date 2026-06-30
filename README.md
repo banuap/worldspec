@@ -65,8 +65,10 @@ worldspec demo             # estate -> current-state checks -> blocked cutover -
 
 **Model builder (source adapter)** — point WorldSpec at a repository and it
 surveys the code and generates a model; the compiler validates it before it is
-saved. Heuristic by default (works offline); LLM-tailored when `anthropic` +
-`ANTHROPIC_API_KEY` are configured:
+saved. Heuristic by default (works offline); LLM-tailored when a provider is
+configured — Gemini, Anthropic, or a **VS Code Copilot bridge** /
+OpenAI-compatible endpoint (`WORLDSPEC_LLM_PROVIDER=copilot`,
+see [`docs/usage.md`](docs/usage.md#configuring-an-llm-provider-optional)):
 
 ```bash
 worldspec build https://github.com/owner/repo --name my-model

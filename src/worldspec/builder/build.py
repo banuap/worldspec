@@ -79,8 +79,9 @@ def build_model(source: str, name: str, *, prefer_llm: bool = True, rich: bool =
 
         if prefer_llm and not llm.is_available():
             note = ("LLM extraction requested but no provider is configured "
-                    "(set GEMINI_API_KEY or ANTHROPIC_API_KEY). Generated a heuristic "
-                    "starter model instead.")
+                    "(set GEMINI_API_KEY, ANTHROPIC_API_KEY, or "
+                    "WORLDSPEC_LLM_PROVIDER=copilot with WORLDSPEC_LLM_BASE_URL for a "
+                    "VS Code Copilot bridge). Generated a heuristic starter model instead.")
         yaml_text, context = heuristic.build_heuristic(survey, name)
         result = compile_text(yaml_text, model_name=name)
         return BuildResult(

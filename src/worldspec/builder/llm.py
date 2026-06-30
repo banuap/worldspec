@@ -1,12 +1,18 @@
-"""Optional LLM-backed model extraction (Gemini or Anthropic).
+"""Optional LLM-backed model extraction (Gemini, Anthropic, or a Copilot bridge).
 
-When a provider is configured (`GEMINI_API_KEY`/`GOOGLE_API_KEY`, or
-`ANTHROPIC_API_KEY`), this turns a repo survey into a *repo-tailored* WorldSpec
-ontology. The compiler validates the output (and feeds errors back for one repair
-round), so a wrong guess fails loudly rather than producing an invalid model.
+When a provider is configured, this turns a repo survey into a *repo-tailored*
+WorldSpec ontology. The compiler validates the output (and feeds errors back for
+one repair round), so a wrong guess fails loudly rather than producing an
+invalid model. Providers:
 
-Gemini is called via the stdlib HTTP client (no SDK dependency). Note: using this
-sends sampled repository source to the configured LLM provider.
+- ``gemini``    — `GEMINI_API_KEY`/`GOOGLE_API_KEY` (stdlib HTTP, no SDK).
+- ``anthropic`` — `ANTHROPIC_API_KEY` (`pip install anthropic`).
+- ``copilot``   — any OpenAI-compatible HTTP endpoint, e.g. a **VS Code Copilot
+  bridge** that exposes Copilot's models on a local `/v1/chat/completions`.
+  Set `WORLDSPEC_LLM_PROVIDER=copilot` and `WORLDSPEC_LLM_BASE_URL`
+  (default `http://localhost:4141/v1`); also stdlib HTTP, no SDK.
+
+Note: using any of these sends sampled repository source to the configured LLM.
 """
 
 from __future__ import annotations
@@ -51,6 +57,9 @@ def is_available() -> bool:
             return False
         import os
         return bool(os.environ.get("ANTHROPIC_API_KEY"))
+    if provider == "copilot":
+        # An OpenAI-compatible bridge (e.g. VS Code Copilot) reachable over HTTP.
+        return bool(config.llm_base_url())
     return False
 
 
@@ -129,6 +138,8 @@ def build_with_llm(
         return _extract_yaml(_gemini_generate(_SPEC, prompt, config.llm_model()))
     if provider == "anthropic":
         return _extract_yaml(_anthropic_generate(_SPEC, prompt, config.llm_model()))
+    if provider == "copilot":
+        return _extract_yaml(_openai_generate(_SPEC, prompt, config.llm_model()))
     raise LLMError("no LLM provider configured")
 
 
@@ -160,6 +171,45 @@ def _gemini_generate(system: str, user: str, model: str) -> str:
         return "".join(p.get("text", "") for p in parts)
     except (KeyError, IndexError):
         raise LLMError(f"Unexpected Gemini response: {json.dumps(data)[:300]}")
+
+
+# ----------------- OpenAI-compatible / Copilot bridge (HTTP) -------------- #
+
+
+def _openai_generate(system: str, user: str, model: str) -> str:
+    """Call an OpenAI-compatible `/chat/completions` endpoint (e.g. a VS Code
+    Copilot bridge). No SDK dependency; auth via Bearer token when configured."""
+    base = config.llm_base_url().rstrip("/")
+    url = f"{base}/chat/completions"
+    body = {
+        "model": model,
+        "temperature": 0.2,
+        "max_tokens": 8192,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+    }
+    headers = {"Content-Type": "application/json"}
+    key = config.llm_api_key()
+    if key:
+        headers["Authorization"] = f"Bearer {key}"
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            data = json.loads(resp.read())
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode(errors="ignore")[:300]
+        raise LLMError(f"Copilot/OpenAI endpoint error {exc.code} for model '{model}': {detail}")
+    except urllib.error.URLError as exc:
+        raise LLMError(
+            f"Copilot/OpenAI endpoint unreachable at {url}: {exc.reason}. "
+            "Is the VS Code Copilot bridge running? Set WORLDSPEC_LLM_BASE_URL."
+        )
+    try:
+        return data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError):
+        raise LLMError(f"Unexpected Copilot/OpenAI response: {json.dumps(data)[:300]}")
 
 
 # --------------------------- Anthropic (SDK) ------------------------------ #

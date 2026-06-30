@@ -17,10 +17,49 @@ worldspec build https://github.com/owner/repo --name my-model
 
 or use the **Create Model** tab in the Studio (`worldspec serve`). It surveys the
 repo, detects the stack, and generates a model — heuristic by default, or a
-repo-tailored model when an LLM is configured (`pip install anthropic` +
-`ANTHROPIC_API_KEY`). The compiler validates the result before it is saved, and
-it appears in the Studio automatically. Treat the output as a **starting point**
-you refine with the steps below.
+repo-tailored model when an LLM provider is configured (see below). The compiler
+validates the result before it is saved, and it appears in the Studio
+automatically. Treat the output as a **starting point** you refine with the
+steps below.
+
+### Configuring an LLM provider (optional)
+
+The builder works fully offline (heuristic). For a richer, repo-tailored model,
+configure one of these providers via environment variables or a gitignored
+`.env` (the explicit `WORLDSPEC_LLM_PROVIDER` always wins; otherwise the
+provider is inferred from whichever credential is present):
+
+| Provider    | How to enable                                                                 |
+|-------------|-------------------------------------------------------------------------------|
+| **Gemini**  | `GEMINI_API_KEY=…` (or `GOOGLE_API_KEY`). No SDK needed.                       |
+| **Anthropic** | `pip install anthropic` + `ANTHROPIC_API_KEY=…`.                            |
+| **Copilot bridge / OpenAI-compatible** | `WORLDSPEC_LLM_PROVIDER=copilot` + `WORLDSPEC_LLM_BASE_URL=…` (see below). |
+
+#### Using a VS Code Copilot bridge
+
+If you already have GitHub Copilot in VS Code, you can route the builder through
+it instead of a separate API key. Run a **Copilot bridge** — any tool that
+exposes Copilot's models on a local OpenAI-compatible endpoint
+(`/v1/chat/completions`) — then point WorldSpec at it:
+
+```bash
+# .env  (or export in your shell)
+WORLDSPEC_LLM_PROVIDER=copilot
+WORLDSPEC_LLM_BASE_URL=http://localhost:4141/v1   # your bridge's URL (this is the default)
+WORLDSPEC_LLM_MODEL=gpt-4o                         # any model the bridge serves
+WORLDSPEC_LLM_API_KEY=…                            # only if your bridge requires a token
+```
+
+```bash
+worldspec build https://github.com/owner/repo --name my-model
+worldspec serve            # the banner prints "LLM provider -> copilot (gpt-4o)"
+```
+
+This path uses the stdlib HTTP client (no extra dependency) and works with any
+OpenAI-compatible gateway, not just Copilot. WorldSpec sends the bridge a
+sampled survey of the repository; the compiler then validates whatever YAML
+comes back, so a bad response fails loudly rather than producing an invalid
+model. `WORLDSPEC_LLM_PROVIDER=openai` is accepted as an alias.
 
 ## Read this first: what WorldSpec does (and doesn't) do today
 

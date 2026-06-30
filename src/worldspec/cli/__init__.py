@@ -227,7 +227,8 @@ def serve(
         typer.echo(f"     LLM provider    -> {prov} ({llm_model()})")
     else:
         typer.echo(f"     {_warn} No LLM provider configured — 'Create Model' will use the "
-                   "heuristic. Add a key to .env (GEMINI_API_KEY / ANTHROPIC_API_KEY).")
+                   "heuristic. Add a key to .env (GEMINI_API_KEY / ANTHROPIC_API_KEY) or "
+                   "set WORLDSPEC_LLM_PROVIDER=copilot for a VS Code Copilot bridge.")
     uvicorn.run("worldspec.api.app:app", host=host, port=port, log_level="info")
 
 

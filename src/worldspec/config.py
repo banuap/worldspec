@@ -52,22 +52,53 @@ def load_env(path: str | Path = ".env") -> None:
 
 
 def llm_provider() -> Optional[str]:
-    """Resolve the active LLM provider from config, or None if unconfigured."""
+    """Resolve the active LLM provider from config, or None if unconfigured.
+
+    Recognized providers: ``gemini``, ``anthropic``, and ``copilot`` (an
+    OpenAI-compatible HTTP endpoint, e.g. a VS Code Copilot bridge; ``openai``
+    is accepted as an alias). Explicit ``WORLDSPEC_LLM_PROVIDER`` wins; otherwise
+    a provider is inferred from whichever credential/endpoint is present.
+    """
     explicit = os.environ.get("WORLDSPEC_LLM_PROVIDER")
     if explicit:
-        return explicit.lower()
+        prov = explicit.lower()
+        return "copilot" if prov == "openai" else prov
     if os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"):
         return "gemini"
     if os.environ.get("ANTHROPIC_API_KEY"):
         return "anthropic"
+    if os.environ.get("WORLDSPEC_LLM_BASE_URL"):
+        return "copilot"
     return None
 
 
 def llm_model() -> str:
     if os.environ.get("WORLDSPEC_LLM_MODEL"):
         return os.environ["WORLDSPEC_LLM_MODEL"]
-    return "gemini-2.5-flash" if llm_provider() == "gemini" else "claude-sonnet-4-6"
+    provider = llm_provider()
+    if provider == "gemini":
+        return "gemini-2.5-flash"
+    if provider == "copilot":
+        return "gpt-4o"
+    return "claude-sonnet-4-6"
 
 
 def gemini_api_key() -> Optional[str]:
     return os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+
+
+def llm_base_url() -> str:
+    """Base URL for an OpenAI-compatible endpoint (the ``copilot`` provider).
+
+    Defaults to a local VS Code Copilot bridge on ``http://localhost:4141/v1``.
+    Point ``WORLDSPEC_LLM_BASE_URL`` at any OpenAI-compatible gateway.
+    """
+    return os.environ.get("WORLDSPEC_LLM_BASE_URL", "http://localhost:4141/v1")
+
+
+def llm_api_key() -> Optional[str]:
+    """Bearer token for the OpenAI-compatible endpoint, if the bridge needs one.
+
+    Many local Copilot bridges accept any value (or none); some require a token.
+    """
+    return os.environ.get("WORLDSPEC_LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")

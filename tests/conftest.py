@@ -4,7 +4,11 @@ from pathlib import Path
 
 # Tests must be deterministic and offline: never load a real .env / call an LLM.
 os.environ["WORLDSPEC_NO_DOTENV"] = "1"
-for _k in ("GEMINI_API_KEY", "GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "WORLDSPEC_LLM_PROVIDER"):
+for _k in (
+    "GEMINI_API_KEY", "GOOGLE_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY",
+    "WORLDSPEC_LLM_PROVIDER", "WORLDSPEC_LLM_MODEL", "WORLDSPEC_LLM_BASE_URL",
+    "WORLDSPEC_LLM_API_KEY",
+):
     os.environ.pop(_k, None)
 
 # Ensure the src/ layout is importable even without an editable install.
