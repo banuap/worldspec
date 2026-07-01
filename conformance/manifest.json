@@ -1,7 +1,7 @@
 {
   "suiteVersion": "0.1.0",
   "language": "0.1",
-  "spec": "https://banuap.github.io/worldspec/spec/0.1/",
+  "spec": "https://w3id.org/worldspec/spec/0.1/",
   "cases": [
     {
       "path": "valid/minimal",

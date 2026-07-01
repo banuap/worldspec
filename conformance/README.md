@@ -1,7 +1,7 @@
 # WorldSpec conformance suite
 
 This suite is the machine-checkable authority for the conformance criteria in
-the [WorldSpec Language Specification](https://banuap.github.io/worldspec/spec/0.1/)
+the [WorldSpec Language Specification](https://w3id.org/worldspec/spec/0.1/)
 (§Conformance). Any implementation — not just the reference one — can run it to
 check itself.
 

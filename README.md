@@ -1,7 +1,7 @@
 # WorldSpec
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21077393.svg)](https://doi.org/10.5281/zenodo.21077393)
-[![Spec: v0.1](https://img.shields.io/badge/spec-v0.1-blue)](https://banuap.github.io/worldspec/spec/0.1/)
+[![Spec: v0.1](https://img.shields.io/badge/spec-v0.1-blue)](https://w3id.org/worldspec/spec/0.1/)
 [![License: AGPL v3](https://img.shields.io/badge/code-AGPL--3.0-blue)](LICENSE)
 [![Spec license: CC BY 4.0](https://img.shields.io/badge/spec-CC--BY--4.0-lightgrey)](LICENSE-spec)
 
@@ -173,9 +173,9 @@ See `AGENTS.md` for the operating rules this codebase is built under and
 
 WorldSpec is published as an open, implementable specification:
 
-- **Spec (v0.1):** <https://banuap.github.io/worldspec/spec/0.1/> — syntax, type
+- **Spec (v0.1):** <https://w3id.org/worldspec/spec/0.1/> — syntax, type
   system, expression/action grammars (EBNF), canonical IR, and conformance.
-- **Namespace:** <https://banuap.github.io/worldspec/ns/0.1/>
+- **Namespace:** <https://w3id.org/worldspec/ns/0.1/>
 - **Model JSON Schema:** [`docs/schemas/worldspec-model-0.1.schema.json`](docs/schemas/worldspec-model-0.1.schema.json)
 - **Conformance suite:** [`conformance/`](conformance/) · **Governance/versioning:** [`GOVERNANCE.md`](GOVERNANCE.md)
 - **Publishing the spec (Pages, w3id, Zenodo, IANA):** [`PUBLISHING.md`](PUBLISHING.md)
@@ -185,8 +185,8 @@ implementation grant, so independent tools can target it without permission.
 
 **For LLMs/agents:** WorldSpec is machine-consumable — any model can author
 conforming WorldSpec from context. See
-[`/llms.txt`](https://banuap.github.io/worldspec/llms.txt) (discovery index),
-[`/llms-full.txt`](https://banuap.github.io/worldspec/llms-full.txt) (whole
+[`/llms.txt`](https://w3id.org/worldspec/llms.txt) (discovery index),
+[`/llms-full.txt`](https://w3id.org/worldspec/llms-full.txt) (whole
 language in one file), and the
 [authoring prompt](docs/authoring-with-an-llm.md).
 

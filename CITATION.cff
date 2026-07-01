@@ -10,7 +10,7 @@ type: software
 authors:
   - name: "The WorldSpec Project"
 repository-code: "https://github.com/banuap/worldspec"
-url: "https://banuap.github.io/worldspec/"
+url: "https://w3id.org/worldspec/"
 license: AGPL-3.0-or-later
 version: "0.1.0"
 date-released: "2026-06-30"
@@ -28,7 +28,7 @@ keywords:
 references:
   - type: standard
     title: "WorldSpec Language Specification 0.1"
-    url: "https://banuap.github.io/worldspec/spec/0.1/"
+    url: "https://w3id.org/worldspec/spec/0.1/"
     authors:
       - name: "The WorldSpec Project"
     license: CC-BY-4.0

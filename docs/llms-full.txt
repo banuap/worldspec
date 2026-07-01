@@ -3,7 +3,7 @@
 This one file contains everything an LLM needs to read or write conforming
 WorldSpec: what it is, the complete language rules, the grammars, the canonical
 IR, the diagnostics, and a complete worked example. Canonical spec:
-https://banuap.github.io/worldspec/spec/0.1/
+https://w3id.org/worldspec/spec/0.1/
 
 ================================================================================
 1. WHAT IT IS
@@ -221,4 +221,4 @@ transition PlatformCutover:
 3. If there are WS-SYN-*/WS-SEM-* diagnostics, fix and regenerate.
 The reference implementation and JSON Schema:
   https://github.com/banuap/worldspec
-  https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json
+  https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json

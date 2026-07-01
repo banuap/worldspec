@@ -8,10 +8,10 @@ title: WorldSpec Language Specification 0.1
 
 | | |
 |---|---|
-| **This version** | `https://banuap.github.io/worldspec/spec/0.1/` |
-| **Latest version** | `https://banuap.github.io/worldspec/spec/` |
-| **Namespace** | `https://banuap.github.io/worldspec/ns/0.1#` |
-| **Model JSON Schema** | `https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json` |
+| **This version** | `https://w3id.org/worldspec/spec/0.1/` |
+| **Latest version** | `https://w3id.org/worldspec/spec/` |
+| **Namespace** | `https://w3id.org/worldspec/ns/0.1#` |
+| **Model JSON Schema** | `https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json` |
 | **Editors** | The WorldSpec Project (`github.com/banuap/worldspec`) |
 | **Date** | 30 June 2026 |
 | **Spec license** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) + royalty-free implementation grant (see §[Status](#status-of-this-document)) |
@@ -121,7 +121,7 @@ Property and dimension declarations use a closed type vocabulary:
 
 The normative shape of each construct (required and optional fields) is as
 given in the reference grammar below and in the [Model JSON
-Schema](https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json),
+Schema](https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json),
 which is normative for document structure. A summary:
 
 - **entity** — `identity` (REQUIRED, non-empty list of declared property names),
@@ -258,7 +258,7 @@ are provisional pending registration (see the repository `PUBLISHING.md`).
 ### Informative
 
 - WorldSpec reference implementation — `https://github.com/banuap/worldspec`.
-- *What is WorldSpec?* — `https://banuap.github.io/worldspec/what-is-worldspec`.
+- *What is WorldSpec?* — `https://w3id.org/worldspec/what-is-worldspec`.
 
 [BCP 14]: https://www.rfc-editor.org/info/bcp14
 [RFC 2119]: https://www.rfc-editor.org/rfc/rfc2119

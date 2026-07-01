@@ -1,7 +1,7 @@
 # WorldSpec Language Specification — v0.1
 
 > **The normative, published specification lives at
-> <https://banuap.github.io/worldspec/spec/0.1/>** (status-stamped, with the
+> <https://w3id.org/worldspec/spec/0.1/>** (status-stamped, with the
 > conformance section, EBNF grammars, and the implementation grant). This page
 > is the implementation-oriented reference and tracks the same v0.1 language.
 

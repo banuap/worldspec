@@ -19,7 +19,7 @@ re-platforming.
 |---|---|
 | **Latest version** | [`/spec/`](spec/) |
 | **This version (0.1)** | [`/spec/0.1/`](spec/0.1/) |
-| **Namespace (0.1)** | `https://banuap.github.io/worldspec/ns/0.1#` — see [`/ns/0.1/`](ns/0.1/) |
+| **Namespace (0.1)** | `https://w3id.org/worldspec/ns/0.1#` — see [`/ns/0.1/`](ns/0.1/) |
 | **Model JSON Schema (0.1)** | [`worldspec-model-0.1.schema.json`](schemas/worldspec-model-0.1.schema.json) |
 | **Status** | Draft Community Specification |
 | **Spec license** | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) + a royalty-free implementation grant |

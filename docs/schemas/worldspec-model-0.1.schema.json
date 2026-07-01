@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json",
+  "$id": "https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json",
   "title": "WorldSpec model document (v0.1)",
-  "description": "Structural schema for a single WorldSpec YAML document. Top-level keys have the form '<construct> <Name>'. Cross-reference and path-resolution rules are semantic and are NOT enforced here; see https://banuap.github.io/worldspec/spec/0.1/.",
+  "description": "Structural schema for a single WorldSpec YAML document. Top-level keys have the form '<construct> <Name>'. Cross-reference and path-resolution rules are semantic and are NOT enforced here; see https://w3id.org/worldspec/spec/0.1/.",
   "type": "object",
   "minProperties": 1,
   "patternProperties": {

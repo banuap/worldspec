@@ -9,21 +9,21 @@ a neutral canonical JSON IR. To generate WorldSpec from an LLM, give the model
 the authoring prompt and the JSON Schema below, then validate the output.
 
 ## Specification
-- [Language Specification v0.1](https://banuap.github.io/worldspec/spec/0.1/): normative syntax, type system, expression/action grammars (EBNF), canonical IR, and conformance
-- [Namespace 0.1](https://banuap.github.io/worldspec/ns/0.1/): the reserved terms (construct keywords, type vocabulary, controlled value sets)
-- [Model JSON Schema (0.1)](https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json): machine-readable structural schema for a model document
+- [Language Specification v0.1](https://w3id.org/worldspec/spec/0.1/): normative syntax, type system, expression/action grammars (EBNF), canonical IR, and conformance
+- [Namespace 0.1](https://w3id.org/worldspec/ns/0.1/): the reserved terms (construct keywords, type vocabulary, controlled value sets)
+- [Model JSON Schema (0.1)](https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json): machine-readable structural schema for a model document
 
 ## Guides
-- [What is WorldSpec?](https://banuap.github.io/worldspec/what-is-worldspec): the language in five minutes, with a complete example model
-- [Authoring with an LLM](https://banuap.github.io/worldspec/authoring-with-an-llm): a paste-ready system prompt for generating conforming WorldSpec with any model
-- [Authoring guide](https://banuap.github.io/worldspec/usage): turn a real codebase (any stack) into a validated model
+- [What is WorldSpec?](https://w3id.org/worldspec/what-is-worldspec): the language in five minutes, with a complete example model
+- [Authoring with an LLM](https://w3id.org/worldspec/authoring-with-an-llm): a paste-ready system prompt for generating conforming WorldSpec with any model
+- [Authoring guide](https://w3id.org/worldspec/usage): turn a real codebase (any stack) into a validated model
 
 ## Examples
-- [COBOL -> Java cutover](https://banuap.github.io/worldspec/demo-scenario): application-modernization estate and the invariants a cutover must preserve
-- [Short-interest rebate (securities lending)](https://banuap.github.io/worldspec/example-short-interest-rebate): a broker-dealer estate with collateralization and rebate invariants
+- [COBOL -> Java cutover](https://w3id.org/worldspec/demo-scenario): application-modernization estate and the invariants a cutover must preserve
+- [Short-interest rebate (securities lending)](https://w3id.org/worldspec/example-short-interest-rebate): a broker-dealer estate with collateralization and rebate invariants
 
 ## Optional
-- [Full single-file language reference](https://banuap.github.io/worldspec/llms-full.txt): the whole language + schema + a worked example in one file, for pasting into a context window
+- [Full single-file language reference](https://w3id.org/worldspec/llms-full.txt): the whole language + schema + a worked example in one file, for pasting into a context window
 - [Governance and versioning](https://github.com/banuap/worldspec/blob/main/GOVERNANCE.md)
 - [Conformance suite](https://github.com/banuap/worldspec/tree/main/conformance)
 - [Reference implementation](https://github.com/banuap/worldspec)

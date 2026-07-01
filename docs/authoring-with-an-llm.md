@@ -7,7 +7,7 @@ title: Authoring WorldSpec with an LLM
 Any model can write **conforming WorldSpec** with no special training — you just
 give it the language rules in context. This page is a paste-ready **system
 prompt**; combine it with the
-[Model JSON Schema](https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json)
+[Model JSON Schema](https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json)
 and validate the output with the compiler (`worldspec validate`) or any
 JSON-Schema validator. This is exactly how the bundled `worldspec build` model
 builder works.
@@ -104,7 +104,7 @@ worldspec validate path/to/model/ --json   # machine-readable: a `diagnostics` a
 ```
 
 Or, for structure only, validate each YAML document against the
-[Model JSON Schema](https://banuap.github.io/worldspec/schemas/worldspec-model-0.1.schema.json)
+[Model JSON Schema](https://w3id.org/worldspec/schemas/worldspec-model-0.1.schema.json)
 with any JSON-Schema (draft 2020-12) validator. The schema checks shape and
 value sets; the compiler additionally checks cross-references and path
 resolution (`WS-SEM-*`).
@@ -112,4 +112,4 @@ resolution (`WS-SEM-*`).
 ## See also
 
 - [What is WorldSpec?](what-is-worldspec) · [Language Specification v0.1](spec/0.1/)
-- [`llms.txt`](https://banuap.github.io/worldspec/llms.txt) — machine-discoverable index of these resources.
+- [`llms.txt`](https://w3id.org/worldspec/llms.txt) — machine-discoverable index of these resources.

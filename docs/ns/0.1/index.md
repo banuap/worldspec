@@ -4,14 +4,14 @@ title: WorldSpec Namespace 0.1
 
 # WorldSpec Namespace 0.1
 
-**Namespace URI:** `https://banuap.github.io/worldspec/ns/0.1#`
+**Namespace URI:** `https://w3id.org/worldspec/ns/0.1#`
 
 This document is the human-readable description of the WorldSpec 0.1 namespace.
 It enumerates the reserved terms of the language — the construct keywords, the
 type vocabulary, and the controlled value sets — that are defined normatively
 by the [WorldSpec Language Specification 0.1](../../spec/0.1/). A term is
 referenced by appending it to the namespace URI as a fragment, e.g.
-`https://banuap.github.io/worldspec/ns/0.1#invariant`.
+`https://w3id.org/worldspec/ns/0.1#invariant`.
 
 > WorldSpec 0.1 has a *fixed* set of reserved terms (below). The vocabulary a
 > modeler defines — their entities, relationships, states, invariants, actions,
